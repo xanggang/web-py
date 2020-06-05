@@ -1,11 +1,23 @@
+import Message from './message'
 
+const m = new Message()
 
-export default (function (e) {
-  let a = '1'
-  let s = async function aaa() {
-    console.log(965)
+const d = new Proxy({}, {
+  get: function(target, propKey) {
+    if (propKey === 'open') {
+      const value = window.prompt()
+      return m.send(value)
+    }
+    return m.send(propKey)
+  },
+  set: function (e) {
+    throw new Error('不允许修改')
   }
+});
 
-  console.log(99999999999999.1);
-  window.s = s
-})()
+
+
+
+
+
+window.d = d

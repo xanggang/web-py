@@ -1,7 +1,7 @@
 {
   "name": "web-py",
   "version": "1.0.0",
-  "description": "",
+  "description": "命令式的前端聊天室， 可以在浏览器控制台查看信息",
   "main": "index.js",
   "scripts": {
     "build": "webpack --mode production",
