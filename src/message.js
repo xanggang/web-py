@@ -1,4 +1,4 @@
-import { dateFormat } from './util'
+import { dateFormat } from './util/util'
 
 const style = {
   date: {
@@ -12,6 +12,14 @@ const style = {
     padding: '3px'
   }
 }
+
+let messageList = [
+  {
+    time: '10: 32',
+    userName: 'lynn',
+    message: 'nnn1'
+  }
+]
 
 function getStyleString(m) {
   if (!style[m]) {
@@ -29,9 +37,28 @@ export default class {
   }
 
   send(message) {
+    console.clear()
+    messageList.forEach(o => {
+        console.log(`%c ${o.time} %c${o.userName}%c : ${o.message}`, getStyleString('date'),
+        getStyleString('user'), '')
+    })
+    messageList.push({
+      time: dateFormat(new Date()),
+      userName: this.userName,
+      message
+    })
     console.log(`%c ${dateFormat(new Date())} %c${this.userName}%c : ${message}`, getStyleString('date'),
       getStyleString('user'), '')
-    return null
+    return 'end'
+  }
+
+  sendSysErr(message) {
+    console.error(`%c ${dateFormat(new Date())} %c 系统错误 : ${message}`, getStyleString('date'), '')
+  }
+
+  sendSysInfo(message) {
+    console.error(`%c ${dateFormat(new Date())} %c 系统提示 : ${message}`, getStyleString('date'),
+      getStyleString('user'), '')
   }
 
 }

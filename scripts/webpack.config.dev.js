@@ -2,6 +2,8 @@ const path = require('path')
 const webpack = require('webpack')
 const ProgressBarPlugin = require('progress-bar-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const isDev = process.env.NODE_ENV =='development'
+const devServer = require('./webpack-dev-server')
 
 const devConfig = {
   mode: 'development',
@@ -49,4 +51,10 @@ const devConfig = {
   ]
 }
 
+console.log(process.env.NODE_ENV, '----------');
+if (!isDev) {
+  devConfig.devServer = devServer.devServer
+}
+
+console.log(devConfig);
 module.exports = devConfig
