@@ -7,7 +7,7 @@ const message = new Message('系统通知')
 
 
 const axiosInstance = axios.create()
-export default function request(options) {
+export default async function request(options) {
   const arg = {}
   arg.headers = {
     'Content-Type': 'application/json',

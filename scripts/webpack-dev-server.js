@@ -6,6 +6,7 @@ module.exports = {
     contentBase: path.join(__dirname, 'dist'),
     compress: true,
     port: 3001,
+    host: '0.0.0.0',
     proxy: {
       '/api': {
         // 调用本地的api

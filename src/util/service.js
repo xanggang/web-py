@@ -12,7 +12,6 @@ export function login(loginData) {
 
 // 注册
 export function register(registerData) {
-  console.log(registerData, 999999);
   return request({
     url: `/account/create`,
     method: 'post',

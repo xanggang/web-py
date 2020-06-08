@@ -37,3 +37,21 @@ const ERROR_STYLE = {
   color: WHILE_COLOR,
   padding: PADDING
 }
+
+const TEXT_STYLE = {
+  background: WHILE_COLOR,
+  color: '#333333',
+  padding: PADDING
+}
+
+function getStyleString(style) {
+  return Object.keys(style).reduce((pre, cur) => {
+    return `${pre}; ${cur}: ${style[cur]}`
+  }, '')
+}
+
+export const PRIMARY = getStyleString(PRIMARY_STYLE)
+export const SUCCESS = getStyleString(SUCCESS_STYLE)
+export const WARNING = getStyleString(WARNING_STYLE)
+export const ERROR = getStyleString(ERROR_STYLE)
+export const TEXT = getStyleString(TEXT_STYLE)
