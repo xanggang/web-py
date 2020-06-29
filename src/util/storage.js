@@ -7,7 +7,7 @@ export function getCache(key) {
   try {
     val = JSON.parse(val);
   } catch (error) {
-    console.log('解析' + key + '出错！');
+    // console.log('解析' + key + '出错！');
     val = '';
   }
   return val;

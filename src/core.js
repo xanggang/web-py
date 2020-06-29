@@ -2,16 +2,14 @@ import Message from './message'
 import { register, checkUserName, login } from './util/service'
 import { saveCache, getCache } from './util/storage';
 import socket from './util/io'
+import store from './store'
 
 class Core {
   constructor(userName) {
     this.userName = userName
     this.msg = new Message(userName)
     this.socket = null
-    const token = getCache('py_token_')
-    if (token) {
-      this.connect()
-    }
+    this.connect()
   }
 
   getLoginInfo() {
@@ -72,13 +70,46 @@ class Core {
 
   connect() {
     this.socket = socket(getCache('py_token_'))
+    // 连接成功
+    this.socket.on('connect', () => {
+      const id = this.socket.id;
+      this.socket.on(id, (msg) => {
+        msg.status === 'error'
+          ? this.msg.sendSysErr(msg.msg)
+          : this.msg.sendSysInfo(msg.msg)
+      });
+    });
+
+    // 连接断开
+    this.socket.on('disconnect', (data) => {
+      this.msg.sendSysErr('连接断开')
+    })
+
+    // 广播消息
     this.socket.on('broadcast', (data) => {
-      this.msg.send(data.data.message)
       if (!this.userName) {
         this.userName = data.user.userName
         this.msg.userName = data.user.userName
       }
+      this.msg.send(data.data.message)
     })
+
+    // 系统消息
+    this.socket.on('sysBroadcast', (message) => {
+      this.msg.sendSysInfo(message)
+    })
+
+    //
+    this.socket.on('online', (message) => {
+      console.log('online', message);
+      store.onlineList = message
+    })
+  }
+
+  onLine() {
+    const userList = store.onlineList.map(o => o.userName)
+    const str = userList.reduce((pre, cur) => pre += cur, '')
+    this.msg.sendSysInfo(str)
   }
 
 
@@ -92,7 +123,7 @@ class Core {
     }
     const msg = window.prompt()
     this.socket.emit('sendMsg', msg)
-    // this.msg.send(msg)
+    return ''
   }
 
   history() {}

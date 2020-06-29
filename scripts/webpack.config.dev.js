@@ -51,10 +51,7 @@ const devConfig = {
   ]
 }
 
-console.log(process.env.NODE_ENV, '----------');
 if (!isDev) {
   devConfig.devServer = devServer.devServer
 }
-
-console.log(devConfig);
 module.exports = devConfig
