@@ -1,6 +1,6 @@
 import Message from './message'
 import { register, checkUserName, login } from './util/service'
-import { saveCache, getCache } from './util/storage';
+import { saveCache, getCache, clearCacheAll } from './util/storage';
 import socket from './util/io'
 import store from './store'
 
@@ -67,16 +67,42 @@ class Core {
     return "↓↓请输入密码↓↓"
   }
 
+  loginOut() {
+    console.log('loginOut--------');
+    clearCacheAll()
+    this.socket.close()
+  }
+
+  setUser(user) {
+    if (user.type === 'noLogin') {
+      saveCache('uuid', user.uuid)
+    }
+  }
 
   connect() {
-    this.socket = socket(getCache('py_token_'))
+    const token = getCache('py_token_')
+    const uuid = getCache('uuid')
+    this.socket = socket(token, uuid)
+
     // 连接成功
     this.socket.on('connect', () => {
       const id = this.socket.id;
       this.socket.on(id, (msg) => {
-        msg.status === 'error'
-          ? this.msg.sendSysErr(msg.msg)
-          : this.msg.sendSysInfo(msg.msg)
+        console.log(msg);
+        switch (msg.status) {
+          case 'error':
+            this.msg.sendSysErr(msg.msg);
+            break;
+          case 'success':
+            this.msg.sendSysInfo(msg.msg);
+            break;
+          case 'setUser':
+            this.setUser(msg.msg)
+            break;
+          case 'loginOut':
+            this.loginOut()
+            break;
+        }
       });
     });
 
