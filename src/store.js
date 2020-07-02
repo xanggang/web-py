@@ -1,9 +1,8 @@
 
 class Data {
-  constructor(userName) {
+  constructor() {
     this.messageList = [] // 记录聊天消息
     this.sysList = []
-    this.user = userName
     this.onlineList = [] // 在线用户
   }
 
@@ -20,6 +19,8 @@ class Data {
       this.sysList.shift()
     }
   }
+
+
 }
 
 

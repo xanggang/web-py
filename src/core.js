@@ -68,27 +68,23 @@ class Core {
   }
 
   loginOut() {
-    console.log('loginOut--------');
     clearCacheAll()
     this.socket.close()
   }
 
   setUser(user) {
-    if (user.type === 'noLogin') {
-      saveCache('uuid', user.uuid)
-    }
+    saveCache('socketId', user.socketId)
   }
 
   connect() {
     const token = getCache('py_token_')
-    const uuid = getCache('uuid')
-    this.socket = socket(token, uuid)
+    const socketId = getCache('socketId')
+    this.socket = socket(token, socketId)
 
     // 连接成功
     this.socket.on('connect', () => {
       const id = this.socket.id;
       this.socket.on(id, (msg) => {
-        console.log(msg);
         switch (msg.status) {
           case 'error':
             this.msg.sendSysErr(msg.msg);
@@ -102,6 +98,11 @@ class Core {
           case 'loginOut':
             this.loginOut()
             break;
+          case 'setOnline':
+            store.onlineList = msg.msg
+            break;
+          case 'privateMsg':
+            this.msg.sendSysInfo(msg.msg);
         }
       });
     });
@@ -127,19 +128,32 @@ class Core {
 
     //
     this.socket.on('online', (message) => {
-      console.log('online', message);
       store.onlineList = message
     })
   }
 
   onLine() {
     const userList = store.onlineList.map(o => o.userName)
-    const str = userList.reduce((pre, cur) => pre += cur, '')
-    this.msg.sendSysInfo(str)
+    if (!userList.length) {
+      this.msg.sendSysInfo('当前房间没有其他用户')
+      return
+    }
+    this.msg.renderUserList(userList)
   }
 
-
-  logout() {}
+  to(userName) {
+    const userList = store.onlineList
+    const toUser = userList.find(user => user.userName === userName)
+    if (!toUser) {
+      this.msg.sendSysErr('你要发送的用户不存在')
+      return
+    }
+    const msg = window.prompt(`向${userName}发送私聊消息`)
+    this.socket.emit('privateMsg', {
+      socketId: toUser.socketId,
+      message: msg
+    })
+  }
 
   // 打开输入框
   open() {
@@ -152,14 +166,18 @@ class Core {
     return ''
   }
 
-  history() {}
+  hmsg() {
+    this.msg.renderHistoryMessage()
+  }
 
   set() {}
 
-  help() {}
+  help() {
 
-  clear() {
+  }
 
+  c() {
+    console.clear()
   }
 
 }

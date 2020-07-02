@@ -44,6 +44,18 @@ const TEXT_STYLE = {
   padding: PADDING
 }
 
+const USER_NAME_STYLE = {
+  background: '#adbbff',
+  color: '#000000',
+  padding: PADDING
+}
+
+const USER_NAME_LIST_STYLE = {
+  ...USER_NAME_STYLE,
+  'margin-left': '10px'
+}
+
+
 function getStyleString(style) {
   return Object.keys(style).reduce((pre, cur) => {
     return `${pre}; ${cur}: ${style[cur]}`
@@ -55,3 +67,5 @@ export const SUCCESS = getStyleString(SUCCESS_STYLE)
 export const WARNING = getStyleString(WARNING_STYLE)
 export const ERROR = getStyleString(ERROR_STYLE)
 export const TEXT = getStyleString(TEXT_STYLE)
+export const USER_NAME = getStyleString(USER_NAME_STYLE)
+export const USER_NAME_LIST = getStyleString(USER_NAME_LIST_STYLE)
