@@ -59,11 +59,15 @@ export default class {
 
   // renderPrivateMsg
   acceptPrivateMsg(userName, msg) {
-    console.log(`%c ${userName} %c 向你发来了消息: %c ${msg}`, STYLE.USER_NAME, '', "")
+    const messageFormat = [`%c ${userName} %c 向你发来了消息: ${msg} %c`, STYLE.USER_NAME, '', '']
+    store.pushMsg(messageFormat)
+    console.log(...messageFormat)
   }
 
   // 发送私密消息
   sendPrivateMsg(userName, msg) {
-    console.log(`%c 向 %c${userName} %c 发送私密消息: %c ${msg}`, '', STYLE.USER_NAME, '', "")
+    const messageFormat = [`向 %c ${userName} %c 发送私密消息: ${msg} %c`, STYLE.USER_NAME, '', '']
+    store.pushMsg(messageFormat)
+    console.log(...messageFormat)
   }
 }

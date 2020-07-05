@@ -24,7 +24,7 @@ const d = new Proxy(core, {
 window.d = d
 window.m = m
 
-window.onerror = function (e) {
-  console.log(e);
-  return true
-}
+// window.onerror = function (e) {
+//   console.log(e);
+//   return true
+// }

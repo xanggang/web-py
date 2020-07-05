@@ -58,6 +58,8 @@ class Core {
 
     let fun = async () => {
       const user = await login({userName, passWord})
+      // 清除上一用户的聊天记录和id信息
+      clearCacheAll()
       this.userName = user.data.userName
       this.msg.userName = user.data.userName
       saveCache('py_token_', user.data.token)
@@ -104,7 +106,7 @@ class Core {
             this.loginOut()
             break;
           case PRIVATE_EVENT.SET_ONLINE:
-            store.onlineList = msg.msg
+            store.setOnlineList(msg.msg)
             break;
           case PRIVATE_EVENT.PRIVATE_MSG:
             this.msg.acceptPrivateMsg(msg.user.userName, msg.msg);
@@ -130,7 +132,7 @@ class Core {
 
     // 在线用户列表
     this.socket.on(SOCKET_EVENT.ONLINE, (message) => {
-      store.onlineList = message
+      store.setOnlineList(message)
     })
   }
 
