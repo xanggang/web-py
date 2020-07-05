@@ -7,21 +7,25 @@ export default class {
     this.userName = userName || '匿名' + +(new Date())
   }
 
-  send(message) {
-    const messageFormat = [`%c ${dateFormat(new Date())} %c${this.userName}%c : ${message}`, STYLE.PRIMARY, STYLE.USER_NAME, '']
+  // 普通消息
+  send(message, userName) {
+    const messageFormat = [`%c ${dateFormat(new Date())} %c${userName}%c : ${message}`, STYLE.PRIMARY, STYLE.USER_NAME, '']
     store.pushMsg(messageFormat)
     console.log(...messageFormat)
     return 'end'
   }
 
+  // 系统错误消息
   sendSysErr(message) {
     console.log(`%c ${dateFormat(new Date())} %c 系统错误 : %c ${message}`, STYLE.PRIMARY, STYLE.ERROR, '')
   }
 
+  // 系统提示消息
   sendSysInfo(message) {
     console.log(`%c ${dateFormat(new Date())} %c 系统提示 %c: ${message}`, STYLE.PRIMARY, STYLE.SUCCESS, STYLE.TEXT)
   }
 
+  // 用户列表， rowLength 每一行是数量
   renderUserList(userNameList, rowLength = 3) {
     let groupList = []
     const length = userNameList.length
@@ -45,6 +49,7 @@ export default class {
     })
   }
 
+  // 查询历史消息
   renderHistoryMessage() {
     const messageList = store.messageList
     messageList.forEach(messageFormat => {
@@ -52,4 +57,13 @@ export default class {
     })
   }
 
+  // renderPrivateMsg
+  acceptPrivateMsg(userName, msg) {
+    console.log(`%c ${userName} %c 向你发来了消息: %c ${msg}`, STYLE.USER_NAME, '', "")
+  }
+
+  // 发送私密消息
+  sendPrivateMsg(userName, msg) {
+    console.log(`%c 向 %c${userName} %c 发送私密消息: %c ${msg}`, '', STYLE.USER_NAME, '', "")
+  }
 }

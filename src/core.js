@@ -3,6 +3,7 @@ import { register, checkUserName, login } from './util/service'
 import { saveCache, getCache, clearCacheAll } from './util/storage';
 import socket from './util/io'
 import store from './store'
+import { SOCKET_EVENT, PRIVATE_EVENT } from "./util/const";
 
 class Core {
   constructor(userName) {
@@ -73,6 +74,10 @@ class Core {
   }
 
   setUser(user) {
+    if (!this.userName) {
+      this.userName = user.userName
+      this.msg.userName = user.userName
+    }
     saveCache('socketId', user.socketId)
   }
 
@@ -82,52 +87,49 @@ class Core {
     this.socket = socket(token, socketId)
 
     // 连接成功
-    this.socket.on('connect', () => {
+    this.socket.on(SOCKET_EVENT.CONNECT, () => {
       const id = this.socket.id;
       this.socket.on(id, (msg) => {
         switch (msg.status) {
-          case 'error':
+          case PRIVATE_EVENT.error:
             this.msg.sendSysErr(msg.msg);
             break;
-          case 'success':
+          case PRIVATE_EVENT.SUCCESS:
             this.msg.sendSysInfo(msg.msg);
             break;
-          case 'setUser':
+          case PRIVATE_EVENT.SET_USER:
             this.setUser(msg.msg)
             break;
-          case 'loginOut':
+          case PRIVATE_EVENT.LOGIN_OUT:
             this.loginOut()
             break;
-          case 'setOnline':
+          case PRIVATE_EVENT.SET_ONLINE:
             store.onlineList = msg.msg
             break;
-          case 'privateMsg':
-            this.msg.sendSysInfo(msg.msg);
+          case PRIVATE_EVENT.PRIVATE_MSG:
+            this.msg.acceptPrivateMsg(msg.user.userName, msg.msg);
+            break;
         }
       });
     });
 
     // 连接断开
-    this.socket.on('disconnect', (data) => {
+    this.socket.on(SOCKET_EVENT.DISCONNECT, (data) => {
       this.msg.sendSysErr('连接断开')
     })
 
     // 广播消息
-    this.socket.on('broadcast', (data) => {
-      if (!this.userName) {
-        this.userName = data.user.userName
-        this.msg.userName = data.user.userName
-      }
-      this.msg.send(data.data.message)
+    this.socket.on(SOCKET_EVENT.BROADCAST, (data) => {
+      this.msg.send(data.data.message, data.user.userName)
     })
 
     // 系统消息
-    this.socket.on('sysBroadcast', (message) => {
+    this.socket.on(SOCKET_EVENT.SYS_BROADCAST, (message) => {
       this.msg.sendSysInfo(message)
     })
 
-    //
-    this.socket.on('online', (message) => {
+    // 在线用户列表
+    this.socket.on(SOCKET_EVENT.ONLINE, (message) => {
       store.onlineList = message
     })
   }
@@ -149,10 +151,11 @@ class Core {
       return
     }
     const msg = window.prompt(`向${userName}发送私聊消息`)
-    this.socket.emit('privateMsg', {
+    this.socket.emit(SOCKET_EVENT.SEND_PRIVATE_MSG, {
       socketId: toUser.socketId,
       message: msg
     })
+    this.msg.sendPrivateMsg(userName, msg)
   }
 
   // 打开输入框
