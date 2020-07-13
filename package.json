@@ -1,10 +1,10 @@
 {
   "name": "web-py",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "description": "命令式的前端聊天室， 可以在浏览器控制台查看信息",
-  "main": "index.js",
+  "main": "dist/main.js",
   "scripts": {
-    "build": "webpack --mode production",
+    "build": "webpack --mode production --config scripts/webpack.config.dev.js",
     "dev": "webpack-dev-server --config scripts/webpack.config.dev.js"
   },
   "author": "",
@@ -12,12 +12,14 @@
   "dependencies": {
     "axios": "^0.19.2",
     "socket.io-client": "^2.3.0",
+    "test": "^1.0.0",
     "webpack": "^4.43.0",
     "webpack-cli": "^3.3.11"
   },
   "devDependencies": {
     "@babel/cli": "^7.10.1",
     "@babel/core": "^7.10.2",
+    "@babel/plugin-transform-modules-umd": "^7.10.4",
     "@babel/plugin-transform-runtime": "^7.10.1",
     "@babel/preset-env": "^7.10.2",
     "babel-loader": "^8.1.0",

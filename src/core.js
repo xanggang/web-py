@@ -3,13 +3,14 @@ import { register, checkUserName, login } from './util/service'
 import { saveCache, getCache, clearCacheAll } from './util/storage';
 import socket from './util/io'
 import store from './store'
-import { SOCKET_EVENT, PRIVATE_EVENT } from "./util/const";
+import { SOCKET_EVENT, PRIVATE_EVENT, HELP_DATA } from "./util/const";
 
 class Core {
-  constructor(userName) {
-    this.userName = userName
-    this.msg = new Message(userName)
+  constructor(url) {
+    this.userName = null
+    this.msg = new Message()
     this.socket = null
+    this.url = url
     this.connect()
   }
 
@@ -49,11 +50,16 @@ class Core {
      }
     fun()
 
-    return "↓↓请输入密码↓↓"
+    return "～～ 操作完成 ～～"
   }
 
   // 登录
   login() {
+    const socketId = getCache('socketId')
+    if (socketId) {
+      this.msg.sendSysErr('本浏览器已经登陆， 清先退出登陆')
+      return
+    }
     const { userName, passWord } = this.getLoginInfo()
 
     let fun = async () => {
@@ -67,12 +73,13 @@ class Core {
     }
 
     fun()
-    return "↓↓请输入密码↓↓"
+    return "～～ 操作完成 ～～"
   }
 
   loginOut() {
     clearCacheAll()
     this.socket.close()
+    return "～～ 操作完成 ～～"
   }
 
   setUser(user) {
@@ -86,7 +93,7 @@ class Core {
   connect() {
     const token = getCache('py_token_')
     const socketId = getCache('socketId')
-    this.socket = socket(token, socketId)
+    this.socket = socket(token, socketId, this.url)
 
     // 连接成功
     this.socket.on(SOCKET_EVENT.CONNECT, () => {
@@ -143,6 +150,7 @@ class Core {
       return
     }
     this.msg.renderUserList(userList)
+    return "～～ 操作完成 ～～"
   }
 
   to(userName) {
@@ -158,6 +166,7 @@ class Core {
       message: msg
     })
     this.msg.sendPrivateMsg(userName, msg)
+    return "～～ 操作完成 ～～"
   }
 
   // 打开输入框
@@ -168,17 +177,23 @@ class Core {
     }
     const msg = window.prompt()
     this.socket.emit('sendMsg', msg)
-    return ''
+    return "～～ 操作完成 ～～"
   }
+
+  // 快速发送消息
 
   hmsg() {
     this.msg.renderHistoryMessage()
+    return "～～ 操作完成 ～～"
   }
 
   set() {}
 
   help() {
-
+    Object.entries(HELP_DATA).forEach(([key, text]) => {
+      this.msg.renderHelp(key, text)
+    })
+    return "～～ 操作完成 ～～"
   }
 
   c() {
@@ -187,4 +202,4 @@ class Core {
 
 }
 
-export default new Core()
+export default Core

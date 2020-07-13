@@ -14,8 +14,12 @@ const devConfig = {
   ],
   output: {
     filename: '[name].js',
-    path: path.join(__dirname, './dist'),
-    publicPath: '/'
+    path: path.join(__dirname, '../dist'),
+    publicPath: '/',
+    // export to AMD, CommonJS, or window
+    libraryTarget: 'umd',
+    // the name exported to window
+    library: 'test',
   },
   resolve: {
     extensions: [

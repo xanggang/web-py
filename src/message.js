@@ -9,7 +9,7 @@ export default class {
 
   // 普通消息
   send(message, userName) {
-    const messageFormat = [`%c ${dateFormat(new Date())} %c${userName}%c : ${message}`, STYLE.PRIMARY, STYLE.USER_NAME, '']
+    const messageFormat = [`%c ${dateFormat(new Date())} %c ${userName} %c : ${message}`, STYLE.PRIMARY, STYLE.USER_NAME, '']
     store.pushMsg(messageFormat)
     console.log(...messageFormat)
     return 'end'
@@ -59,15 +59,19 @@ export default class {
 
   // renderPrivateMsg
   acceptPrivateMsg(userName, msg) {
-    const messageFormat = [`%c ${userName} %c 向你发来了消息: ${msg} %c`, STYLE.USER_NAME, '', '']
+    const messageFormat = [`%c ${dateFormat(new Date())} %c${userName} %c 向你发来了消息: ${msg} %c`, STYLE.PRIMARY, STYLE.USER_NAME, '', '']
     store.pushMsg(messageFormat)
     console.log(...messageFormat)
   }
 
   // 发送私密消息
   sendPrivateMsg(userName, msg) {
-    const messageFormat = [`向 %c ${userName} %c 发送私密消息: ${msg} %c`, STYLE.USER_NAME, '', '']
+    const messageFormat = [`%c ${dateFormat(new Date())} %c 向 %c ${userName} %c 发送私密消息: ${msg} %c`, STYLE.PRIMARY, '' ,STYLE.USER_NAME, '', '']
     store.pushMsg(messageFormat)
     console.log(...messageFormat)
+  }
+
+  renderHelp(key, help) {
+    console.log(`%c ${key} %c: ${help}`, STYLE.PRIMARY, '')
   }
 }

@@ -33,7 +33,6 @@ class Data {
   }
 
   _saveCache(){
-    console.log(this);
     saveCache('__store__', {
       messageList: this.messageList
     })
