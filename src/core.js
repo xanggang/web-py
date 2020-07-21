@@ -7,6 +7,8 @@ import { SOCKET_EVENT, PRIVATE_EVENT, HELP_DATA } from "./util/const";
 
 class Core {
   constructor(url) {
+    this.c()
+    console.log('恭喜你发现了宝藏， 正在连接至隐秘的角落。。。');
     this.userName = null
     this.msg = new Message()
     this.socket = null

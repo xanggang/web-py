@@ -1,6 +1,6 @@
 {
   "name": "web-py",
-  "version": "1.0.4",
+  "version": "1.0.6",
   "description": "命令式的前端聊天室， 可以在浏览器控制台查看信息",
   "main": "dist/main.js",
   "scripts": {
