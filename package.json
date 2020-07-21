@@ -1,6 +1,6 @@
 {
   "name": "web-py",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "命令式的前端聊天室， 可以在浏览器控制台查看信息",
   "main": "dist/main.js",
   "scripts": {
@@ -12,7 +12,6 @@
   "dependencies": {
     "axios": "^0.19.2",
     "socket.io-client": "^2.3.0",
-    "test": "^1.0.0",
     "webpack": "^4.43.0",
     "webpack-cli": "^3.3.11"
   },

@@ -57,7 +57,7 @@ class Core {
   login() {
     const socketId = getCache('socketId')
     if (socketId) {
-      this.msg.sendSysErr('本浏览器已经登陆， 清先退出登陆')
+      this.msg.sendSysErr('本浏览器已经登陆， 清先运行d.loginOut退出登陆')
       return
     }
     const { userName, passWord } = this.getLoginInfo()
